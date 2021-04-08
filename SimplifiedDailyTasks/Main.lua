@@ -40,18 +40,23 @@ function printTrophyInfo(trophyName, trophyQuantity)
 		if trophyName==item.Name:lower() then
 			local xname = string.format(xlink,id,item.Name)
 			print(string.format("<rgb=#%s>%d</rgb> %s ==> trophy locations",numberColor,trophyQuantity,xname))
-		    for location in pairs(item.Locations) do
-				local zone = SimplifiedTasksDatas.taskBoardLocations[location].zone
-				local faction = SimplifiedTasksDatas.taskBoardLocations[location].rep
+
+			for locationName,factionCode in pairs(item.TaskBoards) do
+				local zone = SimplifiedTasksDatas.taskBoardLocations[locationName].zone
 				local zoneName = SimplifiedTasksDatas.zones[zone]
-				local factionName = SimplifiedTasksDatas.factions[faction]
-				print("  "..zoneName.." // "..location.." // "..factionName)
+				local factionName = SimplifiedTasksDatas.factions[factionCode]
+				local factionColor
+				if factionCode == "ZZZ" then
+					factionColor = "D96515"
+				else
+					factionColor = "15D977"
+				end
+				print(string.format("  %s // %s // <rgb=#%s>%s</rgb>",zoneName,locationName,factionColor,factionName))
 			end
 			return
 		end
 	end
 	print_red("No trophy referential info for "..trophyName)
-	return
 end
 
 function printJunkInfo(junkName, junkQuantity)
@@ -83,7 +88,6 @@ function displayItemInfo(index, inventory)
 			printJunkInfo(itemName, itemQuantity)
 		end
 	end
-	return
 end
 
 -- Check all the items in provided inv ; defaults to backpack
@@ -93,21 +97,15 @@ function parseInventory(inventory)
 	for index=0,inventorySize do
 	    displayItemInfo(index, inventory)
     end
-	
-	return
 end
 
 -- Check all the items in provided inv ; defaults to backpack
 function parseVault(vault)
-    print("Entered parseVault function")
-
 	local vaultCapacity = vault:GetCapacity()
 
 	for index=0,vaultCapacity do
 	    displayItemInfo(index, vault)
     end
-
-	return
 end
 
 -- Main command processing
@@ -118,19 +116,16 @@ function TurbineShellCommand:Execute( cmd, args )
 	if cmd=="slv" then
 		local vault = player:GetVault()
 		if vault:IsAvailable() then
-			print_green("Vault trophy items:")
 			parseVault(vault)
 		else
 		    print_red("Vault not available.")
         end
-		return
 	end
 
     -- Reads shared storage
 	if cmd=="sls" then
 		local shared = player:GetSharedStorage()
 		if shared:IsAvailable() then
-			print_green("Shared Storage trophy items:")
 			parseVault(shared)
 		else
 		    print_red("Shared Storage not available.")
@@ -145,7 +140,7 @@ function TurbineShellCommand:Execute( cmd, args )
 	    return
 	end
 
-	if cmd=="sld" then
+	if cmd=="slx" then
 		local id,name = args:match(xpat)
 		if id then
 			print("id : "..id)
@@ -156,6 +151,40 @@ function TurbineShellCommand:Execute( cmd, args )
 
 	end
 
+	if cmd=="slc" then
+		local checkedArray = {}
+		for location in pairs(SimplifiedTasksDatas.taskBoardLocations) do
+			local zoneCode = SimplifiedTasksDatas.taskBoardLocations[location].zone
+			local zoneName = SimplifiedTasksDatas.zones[zoneCode]
+			if SimplifiedTasksDatas.taskBoardLocations[location].checked then
+				table.insert(checkedArray, zoneName.." // "..location)
+			end
+		end
+
+		table.sort(checkedArray)
+
+		for i,element in ipairs(checkedArray) do
+			print(element)
+		end
+	end
+
+	if cmd=="sluc" then
+		local uncheckedArray = {}
+		for location in pairs(SimplifiedTasksDatas.taskBoardLocations) do
+			local zoneCode = SimplifiedTasksDatas.taskBoardLocations[location].zone
+			local zoneName = SimplifiedTasksDatas.zones[zoneCode]
+			if not SimplifiedTasksDatas.taskBoardLocations[location].checked then
+				table.insert(uncheckedArray, zoneName.." // "..location)
+			end
+		end
+
+		table.sort(uncheckedArray)
+
+		for i,element in ipairs(uncheckedArray) do
+			print(element)
+		end
+	end
+
 end
 
-Turbine.Shell.AddCommand( "slv;sls;sli;sld",TurbineShellCommand )
+Turbine.Shell.AddCommand( "slv;sls;sli;slx;slc;sluc",TurbineShellCommand )
