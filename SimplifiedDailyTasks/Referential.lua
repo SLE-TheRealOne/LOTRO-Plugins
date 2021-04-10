@@ -22,31 +22,39 @@ SimplifiedTasksDatas = {
 		["Tinnudir"] = { loc="12.6s,67.2w", zone="EV", checked=true },
 		["Ost Forod"] = { loc="8.1s,64.2w", zone="EV", checked=true },
 		["Echad Garthadir"] = { loc="19.1s,71.0w", zone="EV", checked=true },
+
 		["Camp de Barachen"] = { loc="34.0s,20.2w", zone="TT", checked=true },
 		["Thorenhad"] = { loc="31.6s,15.0w", zone="TT", checked=true },
 		["Echad Candelleth"] = { loc="37.0s,14.2w", zone="TT", checked=true },
+
 		["Camp de Gloin"] = { loc="24.7s,4.1w", zone="MB", checked=true },
 		["Hautes Falaises"] = { loc="24.6s,1.3e", zone="MB", checked=true },
 		["Hrimbarg"] = { loc="24.5s,7.0e", zone="MB", checked=true },
+
 		["Kauppa-kohta"] = { loc="2.6n,58.0w", zone="FO", checked=true },
 		["Pynti-peldot"] = { loc="11.4n,69.6w", zone="FO", checked=true },
 		["Zigilgund"] = { loc="9.6n,80.8w", zone="FO", checked=true },
 		["Suri-kyla"] = { loc="19.0n,70.8w", zone="FO", checked=true },
+
 		["Aughaire"] = { loc="0.0n,39.8w", zone="AN", checked=true },
 		["Tyrn Lhuig"] = { loc="1.7s,33.4w", zone="AN", checked=true },
 		["Gabilshathur"] = { loc="3.6s,26.5w", zone="AN", checked=true },
 		["Gath Forthnir"] = { loc="10.4n,24.1w", zone="AN", checked=true },
+
 		["Gwingris"] = { loc="40.2s,16.0w", zone="ER", checked=true },
 		["Echad Mirobel"] = { loc="52.2s,17.0w", zone="ER", checked=true },
 		["Echad Dunann"] = { loc="50.6s,8.0w", zone="ER", checked=true },
+
 		["Lhan Tarren"] = { loc="75.3s,22.7w", zone="PD", checked=true },
 		["Galtrev"] = { loc="80.1s,16.6w", zone="PD", checked=true },
 		["Avardin"] = { loc="83.4s,20.6w", zone="PD", checked=true },
 		["Barnavon"] = { loc="84.9s,16.5w", zone="PD", checked=true },
 		["Lhan Rhos"] = { loc="87.1s,23.2W", zone="PD", checked=true },
         ["Camp d'éclaireurs rohirrim"] = { loc="81.0s,10.6w", zone="PD", checked=true },
+
 		["Brondavant"] = { loc="86.9s,7.4w", zone="TR", checked=true },
 		["Camp de Grimbold"] = { loc="87.8s,3.9w", zone="TR", checked=true },
+
 	-- Rhovanion starts here
 		["Belvédère Enfoui"] = { loc="8.5s,112.4w", zone="MO", checked=true },
 		["Longue Descente"] = { loc="9.8s,112.7w", zone="MO", checked=true },
@@ -114,12 +122,8 @@ SimplifiedTasksDatas = {
         ["Limlok"] = { loc="20.9n,55.9w", zone="PLF" },
         ["Thokvist"] = { loc="26.0n,58.4w", zone="PLF" },
 
-		-- ["Limlok"] = "PTS", ["Thokvist"] = "PTS"
-
         ["Annâk-khurfu"] = { loc="32.8n,61.0w", zone="VAI" },
         ["Zarkul-sulun"] = { loc="100.7s,17.3w", zone="VAI" },
-
-		-- ["Annâk-khurfu"] = "ZZZ", ["Zarkul-sulun"] = "ZZZ"
 	-- Gondor starts here
 		["Calembel"] = { loc="67.1s,55.9w", zone="WG", checked=true },
 		["Dinadab"] = { loc="63.6s,59.1w", zone="WG", checked=true },
