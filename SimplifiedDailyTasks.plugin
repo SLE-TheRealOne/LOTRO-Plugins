@@ -3,7 +3,7 @@
   <Information>
 	<Name>SimplifiedDailyTasks</Name>
 	<Author>Samy Lerari</Author>
-	<Version>1.0.0</Version>
+	<Version>1.0.1</Version>
 	<Image>SLPlugins/SimplifiedDailyTasks/Ring.tga</Image>
   </Information>
   <Package>SLPlugins.SimplifiedDailyTasks.Main</Package>
