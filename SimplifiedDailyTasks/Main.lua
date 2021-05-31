@@ -59,6 +59,7 @@ function printTrophyInfo(trophyName, trophyQuantity)
 	print_red("No trophy referential info for "..trophyName)
 end
 
+-- Finds trophy in reference data
 function printJunkInfo(junkName, junkQuantity)
 	junkName = junkName:lower()
 	for id,item in pairs(SimplifiedTasksDatas.junk) do
@@ -71,41 +72,56 @@ function printJunkInfo(junkName, junkQuantity)
 	print_red("No junk referential info for "..junkName)
 end
 
--- Display a trophy item and/or add it to a list
-function displayItemInfo(index, inventory)
+-- As items are 50 stack max, this sum quantities
+function displayItemInfo(inventory, inventorySize)
 
-	local item = inventory:GetItem(index)
+	local tempTrophiesToPrint = {}
+	local tempJunkToSell = {}
 
-	if item then
-		local itemInfos = item:GetItemInfo()
-		local itemName = itemInfos:GetName()
-		local itemCategory = itemInfos:GetCategory()
-		local itemQuantity = item:GetQuantity()
+	for index=0,inventorySize do
+		local item = inventory:GetItem(index)
+		if item then
+			local itemInfos = item:GetItemInfo()
+			local itemName = itemInfos:GetName()
+			local itemCategory = itemInfos:GetCategory()
+			local itemQuantity = item:GetQuantity()
 
-		if itemCategory == Trophy then
-			printTrophyInfo(itemName, itemQuantity)
-		elseif itemCategory == Junk then
-			printJunkInfo(itemName, itemQuantity)
+			if itemCategory == Trophy then
+				if tempTrophiesToPrint[itemName] then
+					tempTrophiesToPrint[itemName] = tempTrophiesToPrint[itemName] + itemQuantity
+				else
+					tempTrophiesToPrint[itemName] = itemQuantity
+				end
+			elseif itemCategory == Junk then
+				if tempJunkToSell[itemName] then
+					tempJunkToSell[itemName] = tempJunkToSell[itemName] + itemQuantity
+				else
+					tempJunkToSell[itemName] = itemQuantity
+				end
+			end
 		end
 	end
+
+	for itemName,finalQuantity in pairs(tempTrophiesToPrint) do
+		printTrophyInfo(itemName, finalQuantity)
+	end
+
+	for itemName,finalQuantity in pairs(tempJunkToSell) do
+		printJunkInfo(itemName, finalQuantity)
+	end
+
 end
 
--- Check all the items in provided inv ; defaults to backpack
+-- Player's inventory has it's own method to retrieve size
 function parseInventory(inventory)
-    local inventorySize = inventory:GetSize()
-	
-	for index=0,inventorySize do
-	    displayItemInfo(index, inventory)
-    end
+	local inventorySize = inventory:GetSize()
+	displayItemInfo(inventory, inventorySize)
 end
 
--- Check all the items in provided inv ; defaults to backpack
+-- Vault and shared vault have a different API method to retrieve size
 function parseVault(vault)
 	local vaultCapacity = vault:GetCapacity()
-
-	for index=0,vaultCapacity do
-	    displayItemInfo(index, vault)
-    end
+	displayItemInfo(vault, vaultCapacity)
 end
 
 -- Main command processing
@@ -151,23 +167,6 @@ function TurbineShellCommand:Execute( cmd, args )
 
 	end
 
-	if cmd=="slc" then
-		local checkedArray = {}
-		for location in pairs(SimplifiedTasksDatas.taskBoardLocations) do
-			local zoneCode = SimplifiedTasksDatas.taskBoardLocations[location].zone
-			local zoneName = SimplifiedTasksDatas.zones[zoneCode]
-			if SimplifiedTasksDatas.taskBoardLocations[location].checked then
-				table.insert(checkedArray, zoneName.." // "..location)
-			end
-		end
-
-		table.sort(checkedArray)
-
-		for i,element in ipairs(checkedArray) do
-			print(element)
-		end
-	end
-
 	if cmd=="sluc" then
 		local uncheckedArray = {}
 		for location in pairs(SimplifiedTasksDatas.taskBoardLocations) do
@@ -187,4 +186,4 @@ function TurbineShellCommand:Execute( cmd, args )
 
 end
 
-Turbine.Shell.AddCommand( "slv;sls;sli;slx;slc;sluc",TurbineShellCommand )
+Turbine.Shell.AddCommand( "slv;sls;sli;slx;sluc",TurbineShellCommand )
