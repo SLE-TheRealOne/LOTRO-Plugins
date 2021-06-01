@@ -161,7 +161,7 @@ SimplifiedTasksDatas = {
 		["Ruines de Dingarth"] = { loc="47.5s,8.8e", zone="PG", checked=true },
 		["Magh Ashtu"] = { loc="53.1s,10.8e", zone="PG", checked=true },
 
-		["Estolad Lan"] = { loc="64.6s,2.2w", zone="VM" },
+		["Estolad Lan"] = { loc="64.6s,2.2w", zone="VM", checked=true },
 	},
 
     factions = {
