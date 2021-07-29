@@ -73,7 +73,7 @@ function printJunkInfo(junkName, junkQuantity)
 end
 
 -- As items are 50 stack max, this sum quantities
-function displayItemInfo(inventory, inventorySize)
+function displayItemInfo(inventory, inventorySize, itemType)
 
 	local tempTrophiesToPrint = {}
 	local tempJunkToSell = {}
@@ -102,26 +102,35 @@ function displayItemInfo(inventory, inventorySize)
 		end
 	end
 
-	for itemName,finalQuantity in pairs(tempTrophiesToPrint) do
-		printTrophyInfo(itemName, finalQuantity)
-	end
-
-	for itemName,finalQuantity in pairs(tempJunkToSell) do
-		printJunkInfo(itemName, finalQuantity)
+	if itemType == "all" then
+		for itemName,finalQuantity in pairs(tempTrophiesToPrint) do
+			printTrophyInfo(itemName, finalQuantity)
+		end
+		for itemName,finalQuantity in pairs(tempJunkToSell) do
+			printJunkInfo(itemName, finalQuantity)
+		end
+	elseif itemType == "trophy" then
+		for itemName,finalQuantity in pairs(tempTrophiesToPrint) do
+			printTrophyInfo(itemName, finalQuantity)
+		end
+	elseif itemType =="junk" then
+		for itemName,finalQuantity in pairs(tempJunkToSell) do
+			printJunkInfo(itemName, finalQuantity)
+		end
 	end
 
 end
 
 -- Player's inventory has it's own method to retrieve size
-function parseInventory(inventory)
+function parseInventory(inventory, itemType)
 	local inventorySize = inventory:GetSize()
-	displayItemInfo(inventory, inventorySize)
+	displayItemInfo(inventory, inventorySize, itemType)
 end
 
 -- Vault and shared vault have a different API method to retrieve size
-function parseVault(vault)
+function parseVault(vault, itemType)
 	local vaultCapacity = vault:GetCapacity()
-	displayItemInfo(vault, vaultCapacity)
+	displayItemInfo(vault, vaultCapacity, itemType)
 end
 
 -- Main command processing
@@ -130,9 +139,10 @@ function TurbineShellCommand:Execute( cmd, args )
 
 	-- Reads vault content
 	if cmd=="slv" then
+		print_green("------ SLV ------")
 		local vault = player:GetVault()
 		if vault:IsAvailable() then
-			parseVault(vault)
+			parseVault(vault, "all")
 		else
 		    print_red("Vault not available.")
         end
@@ -140,9 +150,10 @@ function TurbineShellCommand:Execute( cmd, args )
 
     -- Reads shared storage
 	if cmd=="sls" then
+		print_green("------ SLS ------")
 		local shared = player:GetSharedStorage()
 		if shared:IsAvailable() then
-			parseVault(shared)
+			parseVault(shared, "all")
 		else
 		    print_red("Shared Storage not available.")
         end
@@ -151,9 +162,26 @@ function TurbineShellCommand:Execute( cmd, args )
 
     -- Reads player inventory
 	if cmd=="sli" then
+		print_green("------ SLI ------")
         local playerBackpacks = player:GetBackpack()
-        parseInventory(playerBackpacks)
+        parseInventory(playerBackpacks, "all")
 	    return
+	end
+
+	-- Reads player inventory for trophies only
+	if cmd=="slt" then
+		print_green("------ SLT ------")
+		local playerBackpacks = player:GetBackpack()
+		parseInventory(playerBackpacks, "trophy")
+		return
+	end
+
+	-- Reads player inventory for junk only
+	if cmd=="slj" then
+		print_green("------ SLJ ------")
+		local playerBackpacks = player:GetBackpack()
+		parseInventory(playerBackpacks, "junk")
+		return
 	end
 
 	if cmd=="slx" then
@@ -168,6 +196,7 @@ function TurbineShellCommand:Execute( cmd, args )
 	end
 
 	if cmd=="sluc" then
+		print_green("------ SLUC ------")
 		local uncheckedArray = {}
 		for location in pairs(SimplifiedTasksDatas.taskBoardLocations) do
 			local zoneCode = SimplifiedTasksDatas.taskBoardLocations[location].zone
@@ -186,4 +215,4 @@ function TurbineShellCommand:Execute( cmd, args )
 
 end
 
-Turbine.Shell.AddCommand( "slv;sls;sli;slx;sluc",TurbineShellCommand )
+Turbine.Shell.AddCommand( "slv;sls;sli;slx;sluc,slt,slj",TurbineShellCommand )
